@@ -232,9 +232,9 @@ static int threadCmd_Itinerary(const MSG_THREAD* msg)
 {
     GPS_ITINERARY_INFO* msg_data = (GPS_ITINERARY_INFO*) msg->data;
     MSG_ITINERARY_REQ* itinerary_msg;
-    MSG_ITINERARY_REQ* itinerary;
+    MSG_ITINERARY_REQ itinerary;
     int rc = -1;
-    msg_data->itinerary = 666;
+
     if(msg_data->itinerary <= 0)
     {
         LOG_DEBUG("miles is 0,do not send msg!");
@@ -251,24 +251,27 @@ static int threadCmd_Itinerary(const MSG_THREAD* msg)
     itinerary_msg->endtime = htonl(msg_data->endtime);
     itinerary_msg->mileage = htonl(msg_data->itinerary);
 
-    itinerary = alloc_msg(CMD_ITINERARY, sizeof(MSG_ITINERARY_REQ));
-    itinerary->starttime = htonl(msg_data->starttime);
-    itinerary->endtime = htonl(msg_data->endtime);
-    itinerary->mileage = htonl(msg_data->itinerary);
-
     LOG_DEBUG("send itinerary msg,start:%d end:%d itinerary:%d",msg_data->starttime,msg_data->endtime,msg_data->itinerary);
+
     rc = socket_sendData((MSG_ITINERARY_REQ*)itinerary_msg, sizeof(MSG_ITINERARY_REQ));
     if(rc < 0)
     {
-        rc = itinerary_store(itinerary);
-        itinerary->mileage = 555;
+        itinerary.starttime = msg_data->starttime;
+        itinerary.endtime = msg_data->endtime;
+        itinerary.mileage = msg_data->itinerary;
+        rc = itinerary_store(&itinerary);
+        itinerary.mileage = 555;
     }
     else
     {
-        rc = itinerary_get(itinerary);
-        LOG_DEBUG("%d,%d,%d",ntohl(itinerary->starttime),ntohl(itinerary->mileage),ntohl(itinerary->endtime));
+        rc = itinerary_get(&itinerary);
+        itinerary_msg = alloc_msg(CMD_ITINERARY, sizeof(MSG_ITINERARY_REQ));
+        itinerary_msg->starttime = htonl(itinerary.starttime);
+        itinerary_msg->endtime = htonl(itinerary.endtime);
+        itinerary_msg->mileage = htonl(itinerary.mileage);
+        rc = socket_sendData((MSG_ITINERARY_REQ*)itinerary_msg, sizeof(MSG_ITINERARY_REQ));
+        LOG_DEBUG("send itinerary msg,start:%d end:%d itinerary:%d",itinerary.starttime,itinerary.endtime,itinerary.mileage);
     }
-    freeMsg(itinerary);
 
     return 0;
 }
