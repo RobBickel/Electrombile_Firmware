@@ -9,7 +9,6 @@
 #define USER_INC_FS_H_
 
 
-#define MILEAGEFILE_NAME   L"C:\\mileage"
 #define SETTINGFILE_NAME  L"C:\\setting.conf"
 
 void fs_initial(void);

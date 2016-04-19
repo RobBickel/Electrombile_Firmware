@@ -306,7 +306,7 @@ static void vibration_timer_handler(void)
     {
         VibrationTimeAdd();
 
-        if(getVibrationTime() * setting.vibration_timer_period >= (get_autodefend_period() * 60000))
+        if(getVibrationTime() * setting.vibration_timer_period *100>= (get_autodefend_period() * 60000))
         {
             if(get_autodefend_state())
             {

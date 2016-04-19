@@ -141,14 +141,14 @@ static void gps_ItinerarayHandler(const MSG_THREAD* msg)
         LOG_DEBUG("itinerary start");
         gps_ResetMileage();
         starttime = rtc_getTimestamp();
-        if(starttime <= 0)
+        /*if(starttime <= 0)
         {
             LOG_DEBUG("itinerary start error,set state to default");
             set_itinerary_state(ITINERARY_END);
             starttime = 0;
-        }
+        }*/
     }
-    else if(ITINERARY_END == msg_state->state && 0 < starttime)
+    else if(ITINERARY_END == msg_state->state )//&& 0 < starttime)
     {
         LOG_DEBUG("itinerary end");
         gps_MileageSend(starttime,rtc_getTimestamp(),(int)itinerary);
