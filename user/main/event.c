@@ -232,7 +232,6 @@ static int threadCmd_Itinerary(const MSG_THREAD* msg)
 {
     GPS_ITINERARY_INFO* msg_data = (GPS_ITINERARY_INFO*) msg->data;
     MSG_ITINERARY_REQ* itinerary_msg;
-    MSG_ITINERARY_REQ itinerary;
     int rc = -1;
 
     if(msg_data->itinerary <= 0)
