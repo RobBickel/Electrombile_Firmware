@@ -49,6 +49,37 @@ void cmd_Heartbeat(void)
     socket_sendData(msg, msgLen);
 }
 
+int cmd_Itinerary(void)
+{
+    MSG_ITINERARY_REQ* itinerary_msg;
+    MSG_ITINERARY_REQ itinerary;
+    int rc = -1;
+
+    rc = itinerary_get(&itinerary);
+
+    if(rc == -9)//no file ,no itinerary storage
+    {
+        return 0;
+    }
+
+    if(rc < 0)
+    {
+        LOG_ERROR("read itinerary file error!");
+    }
+
+    itinerary_msg = alloc_msg(CMD_ITINERARY, sizeof(MSG_ITINERARY_REQ));
+
+    itinerary_msg->starttime = itinerary.starttime;
+    itinerary_msg->mileage= itinerary.mileage;
+    itinerary_msg->endtime= itinerary.endtime;
+
+    LOG_DEBUG("send itinerary msg,start:%d end:%d itinerary:%d",ntohl(itinerary_msg->starttime),ntohl(itinerary_msg->endtime),ntohl(itinerary_msg->mileage));
+
+    socket_sendData((MSG_ITINERARY_REQ*)itinerary_msg, sizeof(MSG_ITINERARY_REQ));
+
+    return 0;
+}
+
 int cmd_SMS(const void* msg)
 {
     return 0;

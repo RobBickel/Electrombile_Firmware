@@ -59,6 +59,7 @@ static MC_MSG_PROC msgProcs[] =
     {CMD_UPGRADE_END, cmd_UpgradeEnd_rsp},
     {CMD_REBOOT, cmd_Reboot_rsp},
     {CMD_DEVICE_INFO_GET, cmd_DeviceInfo_rsp},
+    {CMD_ITINERARY, cmd_Itinerary_rsp},
 };
 
 int client_handleOnePkt(const void* m, int msgLen)
@@ -103,7 +104,8 @@ int client_proc(const void *m, int msgLen)
     leftLen = msgLen;
     while(leftLen >= ntohs(msg->length) + MSG_HEADER_LEN)
     {
-        if (ntohs(msg->signature) != START_FLAG)        {
+        if (ntohs(msg->signature) != START_FLAG)
+        {
             LOG_ERROR("receive message header signature error:%#x", (unsigned)ntohs(msg->signature));
             return -1;
         }

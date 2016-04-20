@@ -25,10 +25,14 @@
 #include "setting.h"
 #include "battery.h"
 #include "seek.h"
+#include "itinerary.h"
 
 int cmd_Login_rsp(const void* msg)
 {
     LOG_DEBUG("get login respond.");
+
+    cmd_Itinerary();//if logined , check if there is a itinerary exist, if Y send it
+
     fsm_run(EVT_LOGINED);
 
     return 0;
@@ -69,6 +73,17 @@ int cmd_Alarm_rsp(const void* msg)
 
 int cmd_Sms_rsp(const void* msg)
 {
+    return 0;
+}
+
+int cmd_Itinerary_rsp(const void* msg)
+{
+    MSG_HEADER* req = (MSG_HEADER*)msg;
+    MSG_HEADER* rsp = NULL;
+
+    LOG_DEBUG("ititerary send ok.");
+    itinerary_delete();
+
     return 0;
 }
 

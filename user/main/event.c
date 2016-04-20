@@ -24,7 +24,7 @@
 #include "seek.h"
 #include "data.h"
 #include "adc.h"
-#include "initerary.h"
+#include "itinerary.h"
 
 typedef int (*EVENT_FUNC)(const EatEvent_st* event);
 typedef struct
@@ -246,38 +246,18 @@ static int threadCmd_Itinerary(const MSG_THREAD* msg)
          LOG_ERROR("msg from THREAD_GPS error!");
          return -1;
     }
+
+
     itinerary_msg = alloc_msg(CMD_ITINERARY, sizeof(MSG_ITINERARY_REQ));
     itinerary_msg->starttime = htonl(msg_data->starttime);
     itinerary_msg->endtime = htonl(msg_data->endtime);
     itinerary_msg->mileage = htonl(msg_data->itinerary);
 
+    itinerary_store(itinerary_msg);
+
     LOG_DEBUG("send itinerary msg,start:%d end:%d itinerary:%d",msg_data->starttime,msg_data->endtime,msg_data->itinerary);
 
-    rc = socket_sendData((MSG_ITINERARY_REQ*)itinerary_msg, sizeof(MSG_ITINERARY_REQ));
-    if(rc < 0)//send failed , store it
-    {
-        itinerary.starttime = msg_data->starttime;
-        itinerary.endtime = msg_data->endtime;
-        itinerary.mileage = msg_data->itinerary;
-        rc = itinerary_store(&itinerary);
-    }
-    else    //send success , send the storge
-    {
-        rc = itinerary_get(&itinerary);
-        if(rc == -9)//no file
-        {
-            return 0;
-        }
-        else
-        {
-            itinerary_msg = alloc_msg(CMD_ITINERARY, sizeof(MSG_ITINERARY_REQ));
-            itinerary_msg->starttime = htonl(itinerary.starttime);
-            itinerary_msg->endtime = htonl(itinerary.endtime);
-            itinerary_msg->mileage = htonl(itinerary.mileage);
-            rc = socket_sendData((MSG_ITINERARY_REQ*)itinerary_msg, sizeof(MSG_ITINERARY_REQ));
-            LOG_DEBUG("send itinerary msg,start:%d end:%d itinerary:%d",itinerary.starttime,itinerary.endtime,itinerary.mileage);
-        }
-    }
+    socket_sendData((MSG_ITINERARY_REQ*)itinerary_msg, sizeof(MSG_ITINERARY_REQ));
 
     return 0;
 }
