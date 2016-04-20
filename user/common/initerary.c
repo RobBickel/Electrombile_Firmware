@@ -40,7 +40,7 @@ int itinerary_get(MSG_ITINERARY_REQ* itinerary_msg)
     fh = eat_fs_Open(ITINERARYFILE_NAME,FS_READ_ONLY);
     if(fh == EAT_FS_FILE_NOT_FOUND)
     {
-        return 0;
+        return -9;
     }
 
     if (fh < EAT_FS_NO_ERROR)
