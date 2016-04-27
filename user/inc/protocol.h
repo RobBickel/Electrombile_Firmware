@@ -247,19 +247,27 @@ typedef struct
     DEFEND_GET  = 0x03,
 };
 
+/*
+ * defend switch message structure
+ */
 typedef struct
 {
     MSG_HEADER header;
-    int token;
-    char operator;     // refer to DEFEND_TYPE
-}__attribute__((__packed__)) MSG_DEFEND_REQ;
+    char result;
+}__attribute__((__packed__)) MSG_DEFEND_ON_RSP;
 
 typedef struct
 {
     MSG_HEADER header;
-    int token;
     char result;
-}__attribute__((__packed__)) MSG_DEFEND_RSP;
+}__attribute__((__packed__)) MSG_DEFEND_OFF_RSP;
+
+typedef struct
+{
+    MSG_HEADER header;
+    char status;             //0: OFF,1: ON
+}__attribute__((__packed__)) MSG_DEFEND_GET_RSP;
+
 
 /*
  * switch on the seek mode
