@@ -23,13 +23,10 @@ enum
 #define PROTOCOL_VERSION    PROTOCOL_VESION_251
 
 #define START_FLAG (0xAA55)
-
-#define IMEI_LENGTH 15
-#define IMSI_LENGTH 15
-
+#define MAX_IMEI_LENGTH 15
 #define MAX_CCID_LENGTH 20
+#define MAX_IMSI_LENGTH 16
 #define MAX_CELL_NUM 7
-
 #define TEL_NO_LENGTH 11
 
 
@@ -98,7 +95,7 @@ typedef struct
     MSG_HEADER header;
     int version;
     char deciveType;
-    char IMEI[IMEI_LENGTH];
+    char IMEI[MAX_IMEI_LENGTH];
 }__attribute__((__packed__)) MSG_LOGIN_REQ;
 
 enum DeviceType{
@@ -435,7 +432,7 @@ typedef struct
 {
     MSG_HEADER header;
     char CCID[MAX_CCID_LENGTH];
-    char IMSI[IMSI_LENGTH];
+    char IMSI[MAX_IMSI_LENGTH];
 }__attribute__((__packed__)) MSG_SIM_INFO;
 
 typedef MSG_HEADER MSG_DEVICE_INFO_GET_REQ;
@@ -485,6 +482,15 @@ typedef struct
     GPS gps[];
 }__attribute__((__packed__)) MSG_GPS_PACK;
 
+/*
+ * sim info message structure
+ */
+typedef struct
+{
+    MSG_HEADER header;
+    char CCID[MAX_CCID_LENGTH];
+    char IMSI[MAX_IMSI_LENGTH]; //MCC+MNC+MSIN
+}__attribute__((__packed__)) MSG_SIM_INFO_REQ;
 
 #pragma pack(pop)
 

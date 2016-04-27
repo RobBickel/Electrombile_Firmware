@@ -20,7 +20,7 @@
 int cmd_Login(void)
 {
     MSG_LOGIN_REQ* msg = alloc_msg(CMD_LOGIN, sizeof(MSG_LOGIN_REQ));
-    u8 imei[IMEI_LENGTH] = {0};
+    u8 imei[MAX_IMEI_LENGTH] = {0};
 
     if (!msg)
     {
@@ -30,9 +30,9 @@ int cmd_Login(void)
 
     msg->version = htonl(VERSION_NUM);
 
-    eat_get_imei(imei, IMEI_LENGTH);
+    eat_get_imei(imei, MAX_IMEI_LENGTH);
 
-    memcpy(msg->IMEI, imei, IMEI_LENGTH);
+    memcpy(msg->IMEI, imei, MAX_IMEI_LENGTH);
 
     LOG_DEBUG("send login message.");
     socket_sendData(msg, sizeof(MSG_LOGIN_REQ));
